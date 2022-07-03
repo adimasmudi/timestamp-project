@@ -28,14 +28,13 @@ app.get('/api', (req, res)=>{
 app.get('/api/:date', (req, res)=>{
   const regexp = /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/;
   const regexp2 = /^(\d{0,13})?$/; // {0,13} instead of {13}
-  const date_string = req.params.date
-  let date;
+  let date_string = req.params.date
     if(typeof date_string === "string"){
       if(regexp.test(date_string)){
-        date = new Date(date_string);
+        date_string = date_string;
       }
       else if(regexp2.test(date_string)){
-        date = new Date(Number(date_string));
+        date_string = Number(date_string);
       }
       else{
         res.json({
@@ -44,8 +43,8 @@ app.get('/api/:date', (req, res)=>{
         return
       }
       res.json({
-        "unix" : date.getTime(),
-        "utc" : date.toUTCString()
+        "unix" : new Date(date_string).getTime(),
+        "utc" : new Date(date_string).toUTCString()
       })
 }})
 
