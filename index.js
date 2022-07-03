@@ -26,27 +26,32 @@ app.get('/api', (req, res)=>{
 })
 
 app.get('/api/:date', (req, res)=>{
-  const regexp = /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/;
-  const regexp2 = /^(\d{0,13})?$/; // {0,13} instead of {13}
   let date_string = req.params.date
-    if(typeof date_string === "string"){
-      if(regexp.test(date_string)){
-        date_string = date_string;
-      }
-      else if(regexp2.test(date_string)){
-        date_string = Number(date_string);
-      }
-      else{
-        res.json({
-          error : "Invalid Date"
-        })
-        return
-      }
+  if(typeof date_string === "string"){
+    if(/\d{5,}/.test(date_string)){
       res.json({
-        "unix" : new Date(date_string).getTime(),
-        "utc" : new Date(date_string).toUTCString()
+        "unix" : new Date(Number(date_string)).getTime(),
+        "utc" : new Date(Number(date_string)).toUTCString()
       })
-}})
+    }
+    else{
+      let dateObject = new Date(date_string);
+
+    if (dateObject.toString() === "Invalid Date") {
+
+      res.json({ error: "Invalid Date" });
+
+    } else {
+
+      res.json({ unix: dateObject.valueOf(), utc: dateObject.toUTCString() });
+
+    }
+
+    }
+    
+    
+  }
+})
 
 
 // your first API endpoint... 
